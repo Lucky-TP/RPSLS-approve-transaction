@@ -58,8 +58,10 @@ contract RPSLS {
         if (numPlayer > 0) {
             require(msg.sender != players[0], "Already joined.");
         }
-        require(msg.value == 0.000001 ether, "Must stake 0.000001 ETH.");
-        reward += msg.value;
+        // เรียกใช้ approve อัตโนมัติให้ msg.sender อนุญาตให้ contract ถอนเงินได้
+        token.approve(address(this), STAKE_AMOUNT);
+        
+        reward += STAKE_AMOUNT;
         player_not_committed[msg.sender] = true;
         player_not_revealed[msg.sender] = true;
         players.push(msg.sender);
