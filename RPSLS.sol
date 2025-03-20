@@ -93,6 +93,12 @@ contract RPSLS {
             timeUnit.setStartTime();
             numCommits++;
         }
+        // เมื่อ player ทั้งสองได้ commit แล้ว จะต้องมี transferFrom
+        if (numCommits == 2) {
+            bool success0 = token.transferFrom(players[0], address(this), STAKE_AMOUNT);
+            bool success1 = token.transferFrom(players[1], address(this), STAKE_AMOUNT);
+            require(success0 && success1, "Token transfer failed.");
+        }
     }
 
     function revealChoice(bytes32 revealHash) public {
