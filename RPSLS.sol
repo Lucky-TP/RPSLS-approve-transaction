@@ -124,10 +124,9 @@ contract RPSLS {
     function refundIfNoOpponent() public {
         require(numPlayer == 1, "Can only withdraw if waiting for an opponent.");
         require(timeUnit.elapsedSeconds() >= PLAYER_JOIN_TIMEOUT_SECONDS, "Not Timeout Yet.");
-
-        // Refund to only 1 player
-        payable(players[0]).transfer(reward);
-
+        
+        // Refund the stake to the single player waiting for an opponent
+        token.transfer(players[0], 2 * STAKE_AMOUNT);
         resetGame();
     }
 
@@ -136,16 +135,15 @@ contract RPSLS {
         require(numRevealed < 2, "Both players have revealed.");
         require(timeUnit.elapsedSeconds() >= REVEAL_TIMEOUT_SECONDS, "Reveal period not over yet.");
 
-        // 2 players didn't reveal within the time, so refund both equally
+        // If both players fail to reveal, allow anyone to withdraw the funds
         if (player_not_revealed[players[0]] && player_not_revealed[players[1]]) {
-            payable(players[0]).transfer(reward / 2);
-            payable(players[1]).transfer(reward / 2);
+            token.transfer(msg.sender, 2 * STAKE_AMOUNT);
         } else if (player_not_revealed[players[0]]) {
-            // Player 0 didn't reveal, so Player 1 will win.
-            payable(players[1]).transfer(reward);
+            // Player 0 failed to reveal, Player 1 wins
+            token.transfer(players[1], 2 * STAKE_AMOUNT);
         } else {
-            // Player 1 didn't reveal, so Player 0 will win.
-            payable(players[0]).transfer(reward);
+            // Player 1 failed to reveal, Player 0 wins
+            token.transfer(players[0], 2 * STAKE_AMOUNT);
         }
 
         resetGame();
