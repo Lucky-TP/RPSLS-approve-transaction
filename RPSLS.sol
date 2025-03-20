@@ -5,8 +5,12 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "./CommitReveal.sol";
 import "./TimeUnit.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+
 
 contract RPSLS {
+    IERC20 public token;
+    uint256 public constant STAKE_AMOUNT = 0.000001 ether;
     CommitReveal public commitReveal;
     TimeUnit public timeUnit;
 
@@ -25,9 +29,10 @@ contract RPSLS {
 
     address[] public players;
 
-    constructor(address _commitRevealAddress, address _timeUnitAddress) {
+    constructor(address _commitRevealAddress, address _timeUnitAddress, address _tokenAddress) {
         commitReveal = CommitReveal(_commitRevealAddress);
         timeUnit = TimeUnit(_timeUnitAddress);
+        token = IERC20(_tokenAddress);
     }
 
     // function generateRandomInput(uint8 choice) public view returns (bytes32, bytes32) {
