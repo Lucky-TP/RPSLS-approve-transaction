@@ -82,6 +82,11 @@ contract RPSLS {
         require(numPlayer == 2, "Need 2 players.");
         require(isPlayerinGame(msg.sender), "You are not a player in this game.");
         require(numRevealed == 0, "Can't change choice because someone has revealed.");
+
+        // Contract จะต้องเช็คว่าผู้เล่นทั้งสองได้ approve การถอนเงิน
+        require(token.allowance(players[0], address(this)) >= STAKE_AMOUNT, "Player 0 has not approved tokens.");
+        require(token.allowance(players[1], address(this)) >= STAKE_AMOUNT, "Player 1 has not approved tokens.");
+
         commitReveal.commit(msg.sender, dataHash);
         if (player_not_committed[msg.sender]) {
             player_not_committed[msg.sender] = false;
