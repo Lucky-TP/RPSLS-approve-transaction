@@ -158,29 +158,18 @@ contract RPSLS {
     function _checkWinnerAndPay() private {
         uint p0Choice = player_choice[players[0]];
         uint p1Choice = player_choice[players[1]];
-        address payable account0 = payable(players[0]);
-        address payable account1 = payable(players[1]);
+        address account0 = players[0];
+        address account1 = players[1];
 
-        if (isValidChoice(p0Choice) && isValidChoice(p1Choice)) {
-            // Winner logic for Rock, Paper, Scissors, Spock, and Lizard game
-            if ((p0Choice + 1) % 5 == p1Choice || (p0Choice + 3) % 5 == p1Choice) {
-                // Player 1 won, so pay player[1]
-                account1.transfer(reward);
-            }
-            else if ((p1Choice + 1) % 5 == p0Choice || (p1Choice + 3) % 5 == p0Choice) {
-                // Player 0 won, so pay player[0]
-                account0.transfer(reward);
-            }
-            else {
-                // draw, so split reward
-                account0.transfer(reward / 2);
-                account1.transfer(reward / 2);
-            }
+        // คำนวณผลแพ้ชนะ และจ่ายเงินให้ผู้ชนะ
+        if ((p0Choice + 1) % 5 == p1Choice || (p0Choice + 3) % 5 == p1Choice) {
+            token.transfer(account1, 2 * STAKE_AMOUNT);
+        } else if ((p1Choice + 1) % 5 == p0Choice || (p1Choice + 3) % 5 == p0Choice) {
+            token.transfer(account0, 2 * STAKE_AMOUNT);
         } else {
-            account0.transfer(reward / 2);
-            account1.transfer(reward / 2);
+            token.transfer(account0, STAKE_AMOUNT);
+            token.transfer(account1, STAKE_AMOUNT);
         }
-
         resetGame();
     }
 
