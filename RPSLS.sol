@@ -25,13 +25,6 @@ contract RPSLS {
 
     address[] public players;
 
-    address[4] public whitelistedAddresses = [
-        0x5B38Da6a701c568545dCfcB03FcB875f56beddC4,
-        0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2,
-        0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db,
-        0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB
-    ];
-
     constructor(address _commitRevealAddress, address _timeUnitAddress) {
         commitReveal = CommitReveal(_commitRevealAddress);
         timeUnit = TimeUnit(_timeUnitAddress);
@@ -55,17 +48,7 @@ contract RPSLS {
     //     return (revealHash, dataHash);
     // }
 
-    function isWhitelisted(address _player) public view returns (bool) {
-        for (uint i = 0; i < whitelistedAddresses.length; i++) {
-            if (whitelistedAddresses[i] == _player) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     function addPlayer() public payable {
-        require(isWhitelisted(msg.sender), "Not authorized to play.");
         require(numPlayer < 2, "Cannot join: Maximum players reached.");
         if (numPlayer > 0) {
             require(msg.sender != players[0], "Already joined.");
