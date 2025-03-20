@@ -53,7 +53,7 @@ contract RPSLS {
         if (numPlayer > 0) {
             require(msg.sender != players[0], "Already joined.");
         }
-        require(msg.value == 1 ether, "Must stake 1 ETH.");
+        require(msg.value == 0.000001 ether, "Must stake 0.000001 ETH.");
         reward += msg.value;
         player_not_committed[msg.sender] = true;
         player_not_revealed[msg.sender] = true;
